@@ -25,6 +25,10 @@ echo 'export LD_LIBRARY_PATH=/usr/lib64:${LD_LIBRARY_PATH}' >> /etc/profile
 pip ${PIP_GENERAL_ARGS} install ${PIP_INSTALL_ARGS} /usr/local/opt/paddle/share/wheels/*.whl
 paddle version  # print version after build
 
+if [ ${WITH_GPU} == 'ON' ]; then
+  ln -s /usr/lib/x86_64-linux-gnu/libcudnn.so /usr/lib/libcudnn.so
+fi
+
 if [ ${WITH_DEMO} == "ON" ]; then
   apt-get install -y wget unzip perl python-matplotlib tar xz-utils bzip2 gzip coreutils\
 	          sed grep graphviz 
@@ -32,7 +36,6 @@ if [ ${WITH_DEMO} == "ON" ]; then
 fi
 if [ ${IS_DEVEL} == "OFF" ]; then  # clean build packages.
   cd ~
-  # TODO(yuyang18): Do clean for devel package, and cuda devel tools
   rm -rf paddle
 fi
 apt-get clean -y
